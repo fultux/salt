@@ -1,0 +1,17 @@
+{%- set connect_server = salt['pillar.get']('rke2-server:server:connect') -%}
+{%- set tls_san = salt['pillar.get']('rke2-server:tls_san') -%}
+{%- set token = salt['pillar.get']('rke2-server:token') -%}
+{%- set cni = salt['pillar.get']('rke2-server:cni') -%}
+write-kubeconfig-mode: "0644"
+tls-san:
+{% for value in tls_san -%}
+  - {{ value }}{{ '\n' -}}
+{%- endfor %}
+debug: true
+token: {{ token }}
+{% if connect_server == true -%}
+{%- set address = salt['pillar.get']('rke2-server:address') -%}
+server: {{ address }}
+{%- endif %}
+cni: 
+  - {{ cni }}

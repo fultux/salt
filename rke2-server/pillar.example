@@ -1,0 +1,19 @@
+---
+rke2-server:
+  rke2-version:  v1.24.11+rke2r1
+  proxy:
+    enabled: true
+    proxy_http: http://example.com:3128
+    proxy_https: http://example.com:3128
+    no_proxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+  server:
+    connect: true
+    addres: http://your-server:9345
+  token: my-token-mycluster
+  tls-san:
+    - your-server
+    - server-ip
+    - another-url
+  cni: canal
+  
+

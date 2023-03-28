@@ -29,6 +29,22 @@ rke2_conf:
     - create: True
     - makedirs: True
 
+{% if use_proxy == True %}
+{% set proxy_http = salt['pillar.get']('rke2-server:proxy:proxy_http') %}
+{% set proxy_https = salt['pillar.get']('rke2-server:proxy:proxy_https') %}
+{% set no_proxy = salt['pillar.get']('rke2-server:proxy:no_proxy') %}
+create_proxy_config:
+  file.managed:
+    - name: /etc/default/rke2-server
+    - contents: |
+        HTTP_PROXY={{ proxy_http }}
+        HTTPS_PROXY={{ proxy_https }}
+        NO_PROXY={{ no_proxy }}
+    - require: 
+      - cmd: rke2_install
+      - file: rke2_conf
+{% endif %}
+
 get_installer:
   file.managed:
     - source: https://get.rke2.io
@@ -48,21 +64,6 @@ rke2_install:
       - INSTALL_RKE2_VERSION: '{{ rke2_version }}'
 
 
-{% if use_proxy == True %}
-{% set proxy_http = salt['pillar.get']('rke2-server:proxy:proxy_http') %}
-{% set proxy_https = salt['pillar.get']('rke2-server:proxy:proxy_https') %}
-{% set no_proxy = salt['pillar.get']('rke2-server:proxy:no_proxy') %}
-create_proxy_config:
-  file.managed:
-    - name: /etc/default/rke2-server
-    - contents: |
-      HTTP_PROXY={{ proxy_http }}
-      HTTPS_PROXY={{ proxy_https }}
-      NO_PROXY={{ no_proxy }}
-    - require: 
-      - cmd: rke2_install
-{% endif %}
-
 
 rke2_service:
   service.running:
@@ -71,4 +72,3 @@ rke2_service:
     - watch:
       - cmd: rke2_install
       - file: rke2_conf
-      - file: create_proxy_config

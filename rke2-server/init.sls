@@ -41,7 +41,6 @@ create_proxy_config:
         HTTPS_PROXY={{ proxy_https }}
         NO_PROXY={{ no_proxy }}
     - require: 
-      - cmd: rke2_install
       - file: rke2_conf
 {% endif %}
 

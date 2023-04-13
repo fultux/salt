@@ -1,11 +1,16 @@
 {%- set rke2_version = salt['pillar.get']('rke2-server:rke2_version') -%}
 {%- set use_proxy = salt['pillar.get']('rke2-server:proxy:enabled') -%}
 
+install_iptables:
+  pkg.installed:
+    - pkgs:
+      - iptables
+
 config_forwarding:
   file.managed:
     - name: /etc/sysctl.d/90-rke2.conf
     - contents: |
-        net.ipv4.conf.all.forwarding=1
+        net.ipv4.ip_forward = 1
         net.ipv6.conf.all.forwarding=1
     - user: root
     - group: root

@@ -10,7 +10,7 @@ rke2-server:
     connect: true
     addres: http://your-server:9345
   token: my-token-mycluster
-  tls-san:
+  tls_san:
     - your-server
     - server-ip
     - another-url

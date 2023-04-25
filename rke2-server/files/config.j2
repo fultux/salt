@@ -10,7 +10,7 @@ tls-san:
 debug: true
 token: {{ token }}
 {% if connect_server == true -%}
-{%- set address = salt['pillar.get']('rke2-server:address') -%}
+{%- set address = salt['pillar.get']('rke2-server:server:address') -%}
 server: {{ address }}
 {%- endif %}
 cni: 
